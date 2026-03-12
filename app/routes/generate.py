@@ -27,6 +27,8 @@ async def generate_portfolio(
     linkedin_sections = extract_linkedin_sections(linkedin_text)
 
     github_data = await fetch_github_data(github_url)
+    if "error" in github_data:
+        return {"error": github_data["error"]}
 
     onboarding = {
         "github_url": github_url,
