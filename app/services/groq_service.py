@@ -2,18 +2,23 @@ import os
 from groq import Groq
 import json
 
-groq_key = os.getenv("GROQ_API_KEY")
-if not groq_key:
-    print("WARNING: GROQ_API_KEY not found in Environment Variables")
-    groq_key = "placeholder"
+_groq_client = None
 
-client = Groq(api_key=groq_key)
+def get_groq_client():
+    global _groq_client
+    if _groq_client is None:
+        key = os.getenv("GROQ_API_KEY")
+        if not key:
+            raise ValueError("GROQ_API_KEY must be set")
+        _groq_client = Groq(api_key=key)
+    return _groq_client
 
 def generate_portfolio_content(
     github_data: dict,
     linkedin_sections: dict,
     onboarding: dict
 ) -> dict:
+    client = get_groq_client()
     highlighted = onboarding.get("highlighted_projects", [])
     all_repos = github_data.get("repos", [])
 

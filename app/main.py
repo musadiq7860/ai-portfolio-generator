@@ -1,6 +1,13 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+import os
+print("--- BACKEND STARTUP DIAGNOSTICS ---")
+print(f"GROQ_API_KEY present: {bool(os.getenv('GROQ_API_KEY'))}")
+print(f"SUPABASE_URL present: {bool(os.getenv('SUPABASE_URL'))}")
+print(f"SUPABASE_KEY present: {bool(os.getenv('SUPABASE_KEY'))}")
+print("-----------------------------------")
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import github, generate, portfolio

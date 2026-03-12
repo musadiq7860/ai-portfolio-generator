@@ -4,21 +4,22 @@ import os
 
 router = APIRouter()
 
-supabase_url = os.getenv("SUPABASE_URL")
-supabase_key = os.getenv("SUPABASE_KEY")
+_supabase = None
 
-if not supabase_url or not supabase_key:
-    print("WARNING: Supabase URL or Key not found in Environment Variables")
-    # We delay raising error if we want it to start, but Supabase client needs it
-    # For now, let's keep it but at least we know why it fails
-    if not supabase_url: supabase_url = "https://placeholder.supabase.co"
-    if not supabase_key: supabase_key = "placeholder"
-
-supabase = create_client(supabase_url, supabase_key)
+def get_supabase():
+    global _supabase
+    if _supabase is None:
+        url = os.getenv("SUPABASE_URL")
+        key = os.getenv("SUPABASE_KEY")
+        if not url or not key:
+            raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set")
+        _supabase = create_client(url, key)
+    return _supabase
 
 @router.post("/save")
 async def save_portfolio(portfolio: dict):
     try:
+        supabase = get_supabase()
         result = supabase.table("portfolios").upsert({
             "user_id": portfolio.get("user_id"),
             "username": portfolio.get("username"),
@@ -35,6 +36,7 @@ async def save_portfolio(portfolio: dict):
 @router.get("/{username}")
 async def get_portfolio(username: str):
     try:
+        supabase = get_supabase()
         result = supabase.table("portfolios").select("*").eq(
             "username", username
         ).single().execute()
@@ -47,7 +49,9 @@ async def get_portfolio(username: str):
 @router.get("/")
 async def get_all_portfolios():
     try:
-        result = supabase.table("portfolios").select("username, template, data->name, data->role").execute()
+        supabase = get_supabase()
+        # Corrected columns to match actual schema
+        result = supabase.table("portfolios").select("username, style, content->name, content->role").execute()
         return result.data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
