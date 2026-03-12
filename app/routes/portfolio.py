@@ -11,9 +11,17 @@ def get_supabase():
     if _supabase is None:
         url = os.getenv("SUPABASE_URL")
         key = os.getenv("SUPABASE_KEY")
+        print(f"--- DEBUG: Initializing Supabase Client ---")
+        print(f"URL provided: '{url}'")
+        print(f"Key present: {bool(key)}")
         if not url or not key:
-            raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set")
-        _supabase = create_client(url, key)
+            raise ValueError(f"REQUIRED: SUPABASE_URL and SUPABASE_KEY. Current URL: '{url}'")
+        try:
+            _supabase = create_client(url, key)
+            print("--- DEBUG: Supabase Client Initialized Successfully ---")
+        except Exception as e:
+            print(f"--- DEBUG: create_client FAILED with: {str(e)} ---")
+            raise e
     return _supabase
 
 @router.post("/save")
