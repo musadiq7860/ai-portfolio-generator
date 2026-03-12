@@ -1,9 +1,9 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
 from app.routes import github, generate, portfolio
-
-load_dotenv()
 
 app = FastAPI(title="AI Portfolio Generator API")
 

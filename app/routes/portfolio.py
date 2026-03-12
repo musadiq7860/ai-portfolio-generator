@@ -4,10 +4,17 @@ import os
 
 router = APIRouter()
 
-supabase = create_client(
-    os.getenv("SUPABASE_URL"),
-    os.getenv("SUPABASE_KEY")
-)
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
+
+if not supabase_url or not supabase_key:
+    print("WARNING: Supabase URL or Key not found in Environment Variables")
+    # We delay raising error if we want it to start, but Supabase client needs it
+    # For now, let's keep it but at least we know why it fails
+    if not supabase_url: supabase_url = "https://placeholder.supabase.co"
+    if not supabase_key: supabase_key = "placeholder"
+
+supabase = create_client(supabase_url, supabase_key)
 
 @router.post("/save")
 async def save_portfolio(portfolio: dict):

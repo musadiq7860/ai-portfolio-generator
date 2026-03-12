@@ -2,7 +2,12 @@ import os
 from groq import Groq
 import json
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+groq_key = os.getenv("GROQ_API_KEY")
+if not groq_key:
+    print("WARNING: GROQ_API_KEY not found in Environment Variables")
+    groq_key = "placeholder"
+
+client = Groq(api_key=groq_key)
 
 def generate_portfolio_content(
     github_data: dict,
