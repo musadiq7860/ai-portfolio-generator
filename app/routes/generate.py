@@ -20,6 +20,7 @@ async def generate_portfolio(
     template: str = Form(...),
     user_id: str = Form(...),
     username: str = Form(...),
+    full_name: str = Form(""),
     linkedin_pdf: UploadFile = File(...)
 ):
     pdf_bytes = await linkedin_pdf.read()
@@ -37,7 +38,8 @@ async def generate_portfolio(
         "skills_to_emphasize": skills_to_emphasize,
         "one_liner": one_liner,
         "highlighted_projects": json.loads(highlighted_projects),
-        "template": template
+        "template": template,
+        "full_name": full_name
     }
 
     portfolio_content = generate_portfolio_content(
@@ -48,6 +50,7 @@ async def generate_portfolio(
 
     portfolio_content["user_id"] = user_id
     portfolio_content["username"] = username
+    portfolio_content["name"] = full_name or portfolio_content.get("name", username)
     portfolio_content["role"] = role
     portfolio_content["one_liner"] = one_liner
     portfolio_content["template"] = template

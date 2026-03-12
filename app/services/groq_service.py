@@ -29,7 +29,7 @@ def generate_portfolio_content(
 You are a professional portfolio writer. Generate portfolio content for a developer.
 
 DEVELOPER INFO:
-- Name: {github_data.get('name')}
+- Name: {onboarding.get('full_name') or github_data.get('name') or github_data.get('username')}
 - Role: {onboarding.get('role')}
 - One Liner: {onboarding.get('one_liner')}
 - Job Target: {onboarding.get('job_target')}
