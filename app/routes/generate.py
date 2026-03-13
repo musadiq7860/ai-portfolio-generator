@@ -23,43 +23,71 @@ async def generate_portfolio(
     full_name: str = Form(""),
     linkedin_pdf: UploadFile = File(...)
 ):
-    pdf_bytes = await linkedin_pdf.read()
-    linkedin_text = extract_text_from_pdf(pdf_bytes)
-    linkedin_sections = extract_linkedin_sections(linkedin_text)
+    try:
+        pdf_bytes = await linkedin_pdf.read()
+        print(f"DEBUG: Processing PDF ({len(pdf_bytes)} bytes)")
+        try:
+            linkedin_text = extract_text_from_pdf(pdf_bytes)
+            linkedin_sections = extract_linkedin_sections(linkedin_text)
+            print(f"DEBUG: Extracted LinkedIn sections. Text length: {len(linkedin_text)}")
+        except Exception as pdf_err:
+            print(f"DEBUG: PDF Extraction Error: {str(pdf_err)}")
+            return {"error": f"Could not read PDF: {str(pdf_err)}"}
 
-    github_data = await fetch_github_data(github_url)
-    if "error" in github_data:
-        return {"error": github_data["error"]}
+        print(f"DEBUG: Fetching GitHub data for {github_url}")
+        try:
+            github_data = await fetch_github_data(github_url)
+            if "error" in github_data:
+                print(f"DEBUG: GitHub Fetch Error: {github_data['error']}")
+                return {"error": f"GitHub Error: {github_data['error']}"}
+        except Exception as github_err:
+            print(f"DEBUG: GitHub Fetch Exception: {str(github_err)}")
+            return {"error": f"GitHub Connection Error: {str(github_err)}"}
 
-    onboarding = {
-        "github_url": github_url,
-        "role": role,
-        "job_target": job_target,
-        "skills_to_emphasize": skills_to_emphasize,
-        "one_liner": one_liner,
-        "highlighted_projects": json.loads(highlighted_projects),
-        "template": template,
-        "full_name": full_name
-    }
+        onboarding = {
+            "github_url": github_url,
+            "role": role,
+            "job_target": job_target,
+            "skills_to_emphasize": skills_to_emphasize,
+            "one_liner": one_liner,
+            "highlighted_projects": json.loads(highlighted_projects),
+            "template": template,
+            "full_name": full_name
+        }
 
-    portfolio_content = generate_portfolio_content(
-        github_data=github_data,
-        linkedin_sections=linkedin_sections,
-        onboarding=onboarding
-    )
+        print("DEBUG: Generating portfolio content via Groq...")
+        try:
+            portfolio_content = generate_portfolio_content(
+                github_data=github_data,
+                linkedin_sections=linkedin_sections,
+                onboarding=onboarding
+            )
+            if not portfolio_content or "error" in portfolio_content:
+                err_msg = portfolio_content.get("error", "Unknown Groq error")
+                print(f"DEBUG: Groq Service Error: {err_msg}")
+                return {"error": f"AI Synthesis Error: {err_msg}"}
+        except Exception as groq_err:
+            print(f"DEBUG: Groq Service Exception: {str(groq_err)}")
+            return {"error": f"AI Engine Connection Error: {str(groq_err)}"}
 
-    portfolio_content["user_id"] = user_id
-    portfolio_content["username"] = username
-    portfolio_content["name"] = full_name or portfolio_content.get("name", username)
-    portfolio_content["role"] = role
-    portfolio_content["one_liner"] = one_liner
-    portfolio_content["template"] = template
-    portfolio_content["contact"] = {
-        "github": github_data.get("github_url", ""),
-        "avatar": github_data.get("avatar", "")
-    }
+        portfolio_content["user_id"] = user_id
+        portfolio_content["username"] = username
+        portfolio_content["name"] = full_name or portfolio_content.get("name", username)
+        portfolio_content["role"] = role
+        portfolio_content["one_liner"] = one_liner
+        portfolio_content["template"] = template
+        portfolio_content["contact"] = {
+            "github": github_data.get("github_url", ""),
+            "avatar": github_data.get("avatar", "")
+        }
 
-    return portfolio_content
+        print("DEBUG: Portfolio generation successful")
+        return portfolio_content
+    except Exception as e:
+        print(f"CRITICAL ERROR in generate_portfolio: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return {"error": f"System Error: {str(e)}"}
 
 
 @router.post("/cv")
