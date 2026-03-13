@@ -67,27 +67,33 @@ function App() {
     initSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log("DEBUG: Auth State Changed:", _event);
       const newUser = session?.user ?? null
       setUser(newUser)
       
       if (newUser) {
-        const { data } = await supabase
-          .from('portfolios')
-          .select('*')
-          .eq('user_id', newUser.id)
-          .single()
-        
-        if (data) {
-          setPortfolio(data)
-          setPortfolioExists(true)
-        } else {
-          setPortfolio(null)
-          setPortfolioExists(false)
+        try {
+          const { data } = await supabase
+            .from('portfolios')
+            .select('*')
+            .eq('user_id', newUser.id)
+            .maybeSingle()
+          
+          if (data) {
+            setPortfolio(data)
+            setPortfolioExists(true)
+          } else {
+            setPortfolio(null)
+            setPortfolioExists(false)
+          }
+        } catch (err) {
+          console.error("DEBUG: Portfolio fetch error on change:", err)
         }
       } else {
         setPortfolio(null)
         setPortfolioExists(false)
       }
+      setLoading(false) // Final safety
     })
 
     return () => subscription.unsubscribe()

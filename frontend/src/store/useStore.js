@@ -32,6 +32,13 @@ const useStore = create(
     }),
     {
       name: 'portfolio-ai-storage',
+      partialize: (state) => ({
+        user: state.user,
+        portfolio: state.portfolio,
+        githubData: state.githubData,
+        onboarding: state.onboarding,
+        portfolioExists: state.portfolioExists
+      })
     }
   )
 )
