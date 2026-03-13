@@ -1,9 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
 
 const Home = () => {
+  const navigate = useNavigate();
   const { user, portfolioExists } = useStore();
+
+  useEffect(() => {
+    if (user) {
+      navigate(portfolioExists ? "/preview" : "/onboarding");
+    }
+  }, [user, portfolioExists, navigate]);
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--geist-background)' }}>
