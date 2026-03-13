@@ -14,6 +14,8 @@ const ProtectedRoute = ({ children }) => {
   const { user, isLoading } = useStore()
   const location = useLocation()
   
+  console.log("DEBUG: ProtectedRoute state:", { user: !!user, isLoading });
+
   if (isLoading) return null
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />
   
@@ -98,6 +100,18 @@ function App() {
 
     return () => subscription.unsubscribe()
   }, [setUser, setPortfolio, setPortfolioExists, setLoading])
+
+  useEffect(() => {
+    // Failsafe: Reset loading after 5 seconds no matter what to prevent blank screens
+    const timer = setTimeout(() => {
+      const state = useStore.getState()
+      if (state.isLoading) {
+        console.warn("DEBUG: Initial loading took too long, forcing clear.");
+        setLoading(false);
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [setLoading]);
 
   return (
     <>

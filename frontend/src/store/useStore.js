@@ -8,6 +8,15 @@ const useStore = create(
       portfolio: null,
       githubData: null,
       onboarding: null,
+      onboardingForm: {
+        githubUrl: '',
+        role: '',
+        jobTarget: '',
+        skillsToEmphasize: '',
+        oneLiner: '',
+        highlightedProjects: [],
+        step: 1
+      },
       isLoading: false,
       portfolioExists: false,
 
@@ -18,6 +27,9 @@ const useStore = create(
       }),
       setGithubData: (githubData) => set({ githubData }),
       setOnboarding: (onboarding) => set({ onboarding }),
+      setOnboardingForm: (updates) => set((state) => ({ 
+        onboardingForm: { ...state.onboardingForm, ...updates } 
+      })),
       setLoading: (isLoading) => set({ isLoading }),
       setPortfolioExists: (portfolioExists) => set({ portfolioExists }),
 

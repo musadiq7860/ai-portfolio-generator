@@ -4,20 +4,22 @@ import useStore from '../store/useStore';
 import LoadingScreen from '../components/LoadingScreen';
 
 const Onboarding = () => {
-  const [step, setStep] = useState(1);
-  const [githubUrl, setGithubUrl] = useState('');
+  const { onboardingForm, setOnboardingForm, setGithubData, setOnboarding, user } = useStore();
+  const { step, githubUrl, role, jobTarget, skillsToEmphasize, oneLiner, highlightedProjects } = onboardingForm;
   const [linkedinPdf, setLinkedinPdf] = useState(null);
-  const [role, setRole] = useState('');
-  const [jobTarget, setJobTarget] = useState('');
-  const [skillsToEmphasize, setSkillsToEmphasize] = useState('');
-  const [oneLiner, setOneLiner] = useState('');
-  const [highlightedProjects, setHighlightedProjects] = useState([]);
   const [githubData, setLocalGithubData] = useState(null);
   
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const navigate = useNavigate();
-  const { setGithubData, setOnboarding, user } = useStore();
+
+  const setStep = (s) => setOnboardingForm({ step: s });
+  const setGithubUrl = (val) => setOnboardingForm({ githubUrl: val });
+  const setRole = (val) => setOnboardingForm({ role: val });
+  const setJobTarget = (val) => setOnboardingForm({ jobTarget: val });
+  const setSkillsToEmphasize = (val) => setOnboardingForm({ skillsToEmphasize: val });
+  const setOneLiner = (val) => setOnboardingForm({ oneLiner: val });
+  const setHighlightedProjects = (val) => setOnboardingForm({ highlightedProjects: val });
 
   const handleFetchGithub = async () => {
     if (!githubUrl) return;
