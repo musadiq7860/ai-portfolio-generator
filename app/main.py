@@ -26,6 +26,18 @@ app.include_router(github.router, prefix="/api/github", tags=["GitHub"])
 app.include_router(generate.router, prefix="/api/generate", tags=["Generate"])
 app.include_router(portfolio.router, prefix="/api/portfolio", tags=["Portfolio"])
 
+@app.get("/api/health")
+async def health_check():
+    return {
+        "status": "online",
+        "env": {
+            "GROQ_API_KEY": bool(os.getenv("GROQ_API_KEY")),
+            "SUPABASE_URL": bool(os.getenv("SUPABASE_URL")),
+            "SUPABASE_KEY": bool(os.getenv("SUPABASE_KEY")),
+            "GITHUB_TOKEN": bool(os.getenv("GITHUB_TOKEN"))
+        }
+    }
+
 @app.get("/")
 def root():
     return {"message": "AI Portfolio Generator API is running"}
