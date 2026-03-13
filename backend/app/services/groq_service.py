@@ -2,13 +2,23 @@ import os
 from groq import Groq
 import json
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+_groq_client = None
+
+def get_groq_client():
+    global _groq_client
+    if _groq_client is None:
+        key = os.getenv("GROQ_API_KEY")
+        if not key:
+            raise ValueError("GROQ_API_KEY must be set")
+        _groq_client = Groq(api_key=key)
+    return _groq_client
 
 def generate_portfolio_content(
     github_data: dict,
     linkedin_sections: dict,
     onboarding: dict
 ) -> dict:
+    client = get_groq_client()
     highlighted = onboarding.get("highlighted_projects", [])
     all_repos = github_data.get("repos", [])
 
@@ -19,7 +29,7 @@ def generate_portfolio_content(
 You are a professional portfolio writer. Generate portfolio content for a developer.
 
 DEVELOPER INFO:
-- Name: {github_data.get('name')}
+- Name: {onboarding.get('full_name') or github_data.get('name') or github_data.get('username')}
 - Role: {onboarding.get('role')}
 - One Liner: {onboarding.get('one_liner')}
 - Job Target: {onboarding.get('job_target')}

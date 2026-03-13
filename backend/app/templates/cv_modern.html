@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', serif; color: #1a1a1a; background: #fff; padding: 40px; }
+  .header { border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 24px; }
+  .name { font-size: 36px; font-weight: 700; letter-spacing: -1px; }
+  .role { font-size: 16px; color: #555; margin-top: 4px; }
+  .one-liner { font-size: 14px; color: #333; margin-top: 8px; font-style: italic; }
+  .contact { display: flex; gap: 20px; margin-top: 12px; font-size: 12px; color: #555; }
+  .section { margin-bottom: 24px; }
+  .section-title { font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; border-bottom: 1px solid #ddd; padding-bottom: 6px; margin-bottom: 14px; color: #000; }
+  .bio { font-size: 13px; line-height: 1.7; color: #333; }
+  .skills-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-tag { background: #f0f0f0; padding: 4px 10px; border-radius: 3px; font-size: 12px; }
+  .project { margin-bottom: 16px; }
+  .project-name { font-size: 14px; font-weight: 700; }
+  .project-featured { font-size: 10px; background: #000; color: #fff; padding: 2px 6px; border-radius: 2px; margin-left: 8px; vertical-align: middle; }
+  .project-desc { font-size: 12px; color: #444; margin-top: 4px; line-height: 1.6; }
+  .project-tech { font-size: 11px; color: #777; margin-top: 4px; }
+  .exp-item { margin-bottom: 14px; }
+  .exp-title { font-size: 14px; font-weight: 700; }
+  .exp-company { font-size: 12px; color: #555; }
+  .exp-desc { font-size: 12px; color: #444; margin-top: 4px; line-height: 1.6; }
+  .edu-item { margin-bottom: 10px; }
+  .edu-degree { font-size: 14px; font-weight: 700; }
+  .edu-school { font-size: 12px; color: #555; }
+  .rate { font-size: 13px; color: #333; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="name">{{ name }}</div>
+  <div class="role">{{ role }}</div>
+  <div class="one-liner">{{ one_liner }}</div>
+  <div class="contact">
+    {% if contact.github %}<span>GitHub: {{ contact.github }}</span>{% endif %}
+    {% if suggested_rate %}<span>Rate: {{ suggested_rate }}</span>{% endif %}
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">About</div>
+  <div class="bio">{{ bio }}</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Skills</div>
+  <div class="skills-list">
+    {% for skill in skills %}
+    <span class="skill-tag">{{ skill }}</span>
+    {% endfor %}
+  </div>
+</div>
+
+{% if featured_projects %}
+<div class="section">
+  <div class="section-title">Featured Projects</div>
+  {% for project in featured_projects %}
+  <div class="project">
+    <div class="project-name">{{ project.name }}<span class="project-featured">FEATURED</span></div>
+    <div class="project-desc">{{ project.description }}</div>
+    <div class="project-tech">{{ project.technologies | join(', ') }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if other_projects %}
+<div class="section">
+  <div class="section-title">Other Projects</div>
+  {% for project in other_projects %}
+  <div class="project">
+    <div class="project-name">{{ project.name }}</div>
+    <div class="project-desc">{{ project.description }}</div>
+    <div class="project-tech">{{ project.technologies | join(', ') }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if experience %}
+<div class="section">
+  <div class="section-title">Experience</div>
+  {% for exp in experience %}
+  <div class="exp-item">
+    <div class="exp-title">{{ exp.title }}</div>
+    <div class="exp-company">{{ exp.company }} · {{ exp.duration }}</div>
+    <div class="exp-desc">{{ exp.description }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if education %}
+<div class="section">
+  <div class="section-title">Education</div>
+  {% for edu in education %}
+  <div class="edu-item">
+    <div class="edu-degree">{{ edu.degree }}</div>
+    <div class="edu-school">{{ edu.institution }} · {{ edu.year }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+</body>
+</html>

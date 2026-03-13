@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', Arial, sans-serif; color: #111; background: #fff; padding: 0; }
+  .sidebar { position: absolute; left: 0; top: 0; bottom: 0; width: 30%; background: #1a1a1a; color: #fff; padding: 40px 30px; }
+  .main { margin-left: 30%; width: 70%; padding: 40px 40px; }
+  .name { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 10px; text-transform: uppercase; }
+  .role { font-size: 16px; color: #ff3e3e; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+  .contact-item { margin-bottom: 15px; font-size: 12px; color: #ccc; }
+  .contact-label { font-weight: bold; color: #fff; display: block; margin-bottom: 2px; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; }
+  .sidebar-section { margin-top: 40px; }
+  .sidebar-title { font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid #ff3e3e; padding-bottom: 5px; margin-bottom: 15px; }
+  .skill-tag { display: inline-block; background: #333; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 11px; margin-right: 5px; margin-bottom: 8px; }
+  .section-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; color: #1a1a1a; display: flex; align-items: center; }
+  .section-title::after { content: ''; flex: 1; height: 2px; background: #eee; margin-left: 15px; }
+  .bio { font-size: 14px; line-height: 1.6; color: #444; margin-bottom: 30px; }
+  .project { margin-bottom: 25px; }
+  .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .project-name { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  .project-featured { font-size: 10px; background: #ff3e3e; color: #fff; padding: 2px 8px; border-radius: 20px; font-weight: bold; }
+  .project-desc { font-size: 13px; line-height: 1.5; color: #555; }
+  .project-tech { font-size: 11px; color: #888; margin-top: 5px; font-weight: 600; }
+  .exp-item { margin-bottom: 20px; }
+  .exp-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  .exp-company-dates { font-size: 12px; color: #ff3e3e; font-weight: 600; margin-bottom: 5px; }
+  .exp-desc { font-size: 13px; line-height: 1.5; color: #555; }
+  .edu-item { margin-bottom: 15px; }
+  .edu-degree { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  .edu-school-year { font-size: 12px; color: #555; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="name">{{ name }}</div>
+  <div class="role">{{ role }}</div>
+  
+  <div class="sidebar-section">
+    <div class="contact-item">
+      <span class="contact-label">GitHub</span>
+      {{ contact.github or 'Not Provided' }}
+    </div>
+    {% if suggested_rate %}
+    <div class="contact-item">
+      <span class="contact-label">Expected Rate</span>
+      {{ suggested_rate }}
+    </div>
+    {% endif %}
+    {% if one_liner %}
+    <div class="contact-item">
+      <span class="contact-label">Focus</span>
+      {{ one_liner }}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-title">Skills</div>
+    <div class="skills-list">
+      {% for skill in skills %}
+      <span class="skill-tag">{{ skill }}</span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="section">
+    <div class="section-title">About Me</div>
+    <div class="bio">{{ bio }}</div>
+  </div>
+
+  {% if featured_projects %}
+  <div class="section">
+    <div class="section-title">Featured Work</div>
+    {% for project in featured_projects %}
+    <div class="project">
+      <div class="project-header">
+        <span class="project-name">{{ project.name }}</span>
+        <span class="project-featured">FEATURED</span>
+      </div>
+      <div class="project-desc">{{ project.description }}</div>
+      <div class="project-tech">{{ project.technologies | join(' // ') }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if experience %}
+  <div class="section">
+    <div class="section-title">Experience</div>
+    {% for exp in experience %}
+    <div class="exp-item">
+      <div class="exp-title">{{ exp.title }}</div>
+      <div class="exp-company-dates">{{ exp.company }} // {{ exp.duration }}</div>
+      <div class="exp-desc">{{ exp.description }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if education %}
+  <div class="section">
+    <div class="section-title">Education</div>
+    {% for edu in education %}
+    <div class="edu-item">
+      <div class="edu-degree">{{ edu.degree }}</div>
+      <div class="edu-school-year">{{ edu.institution }} // {{ edu.year }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+</body>
+</html>
