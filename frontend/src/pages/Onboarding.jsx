@@ -79,7 +79,12 @@ const Onboarding = () => {
 
       console.log("DEBUG: Backend response status:", res.status);
       const data = await res.json();
-      if (!res.ok || data.error) throw new Error(data.error || 'Generation failed.');
+      console.log("DEBUG: Backend returned data:", data);
+      
+      if (!res.ok || data.error) {
+        console.error("DEBUG: Generation failed with:", data.error || 'No specific error');
+        throw new Error(data.error || 'Generation failed.');
+      }
 
       console.log("DEBUG: Generation successful, data received.");
       setGithubData(githubData);
