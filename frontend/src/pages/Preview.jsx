@@ -9,6 +9,8 @@ const Preview = () => {
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
 
+  console.log("DEBUG: Preview page reached. Content present:", !!onboarding?.content);
+
   if (!onboarding || !onboarding.content) {
     return (
       <div className="container" style={{ padding: '160px 0', textAlign: 'center' }}>
