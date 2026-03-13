@@ -91,7 +91,7 @@ const Register = () => {
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="Elon Musk"
+              placeholder="Enter your name"
               className="input-geist"
             />
           </div>

@@ -35,24 +35,32 @@ function App() {
 
   useEffect(() => {
     const initSession = async () => {
-      setLoading(true)
-      const { data: { session } } = await supabase.auth.getSession()
-      const initialUser = session?.user ?? null
-      setUser(initialUser)
+      try {
+        setLoading(true)
+        const { data: { session } } = await supabase.auth.getSession()
+        const initialUser = session?.user ?? null
+        setUser(initialUser)
 
-      if (initialUser) {
-        const { data } = await supabase
-          .from('portfolios')
-          .select('*')
-          .eq('user_id', initialUser.id)
-          .single()
-        
-        if (data) {
-          setPortfolio(data)
-          setPortfolioExists(true)
+        if (initialUser) {
+          const { data, error } = await supabase
+            .from('portfolios')
+            .select('*')
+            .eq('user_id', initialUser.id)
+            .maybeSingle()
+          
+          if (data) {
+            setPortfolio(data)
+            setPortfolioExists(true)
+          } else {
+            setPortfolio(null)
+            setPortfolioExists(false)
+          }
         }
+      } catch (error) {
+        console.error("Session init error:", error)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
 
     initSession()

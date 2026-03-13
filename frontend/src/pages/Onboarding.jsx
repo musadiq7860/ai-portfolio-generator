@@ -108,7 +108,7 @@ const Onboarding = () => {
                 <label className="label-geist">GitHub Repository URL</label>
                 <input
                   type="url"
-                  placeholder="https://github.com/username"
+                  placeholder="https://github.com/your-username"
                   value={githubUrl}
                   onChange={(e) => setGithubUrl(e.target.value)}
                   className="input-geist"
