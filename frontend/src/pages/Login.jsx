@@ -9,8 +9,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const setUser = useStore((state) => state.setUser);
-  const portfolioExists = useStore((state) => state.portfolioExists);
+  const { setUser, portfolioExists, isLoading } = useStore();
+  
+  if (isLoading) return null;
 
   const handleLogin = async (e) => {
     e.preventDefault();
