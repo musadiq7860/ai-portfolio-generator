@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from supabase import create_client
+from app.services.cv_generator import generate_cv_pdf
 import os
 
 router = APIRouter()
@@ -39,6 +40,30 @@ async def save_portfolio(portfolio: dict):
         }).execute()
         return {"message": "Portfolio saved successfully", "data": result.data}
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/{username}/cv")
+async def get_portfolio_cv(username: str, cv_template: str = "modern"):
+    try:
+        supabase = get_supabase()
+        result = supabase.table("portfolios").select("*").eq("username", username).single().execute()
+        if not result.data:
+            raise HTTPException(status_code=404, detail="Portfolio not found")
+        
+        portfolio_data = result.data.get("content", {})
+        # Ensure name and role are in the dict for cv_generator
+        portfolio_data["name"] = portfolio_data.get("name", username)
+        portfolio_data["role"] = result.data.get("focus_role", "Developer")
+        portfolio_data["one_liner"] = result.data.get("one_liner", "")
+        
+        pdf_bytes = generate_cv_pdf(portfolio_data, cv_template)
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename={username}_cv.pdf"}
+        )
+    except Exception as e:
+        print(f"CV Generation Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{username}")
