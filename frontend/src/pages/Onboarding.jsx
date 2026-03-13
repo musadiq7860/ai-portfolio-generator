@@ -21,15 +21,18 @@ const Onboarding = () => {
 
   const handleFetchGithub = async () => {
     if (!githubUrl) return;
+    console.log("DEBUG: Fetching GitHub repos for:", githubUrl);
     setLoading(true);
     setLoadingMessage('Fetching repositories...');
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/github/repos?github_url=${githubUrl}`);
       const data = await res.json();
       if (data.error) throw new Error(data.error);
+      console.log("DEBUG: Repos fetched successfully:", data.repos?.length);
       setLocalGithubData(data);
       setStep(2);
     } catch (err) {
+      console.error("DEBUG: GitHub Fetch failed:", err);
       alert(`Error: ${err.message}`);
     } finally {
       setLoading(false);
@@ -46,6 +49,9 @@ const Onboarding = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("DEBUG: Initiating Generation Match...");
+    console.log("DEBUG: Payload Info:", { role, jobTarget, highlightedProjects, hasPdf: !!linkedinPdf });
+    
     setLoading(true);
     setLoadingMessage('AI is synthesizing your identity...');
 
@@ -63,18 +69,23 @@ const Onboarding = () => {
       formData.append('full_name', user.user_metadata?.full_name || '');
       formData.append('linkedin_pdf', linkedinPdf);
 
+      console.log("DEBUG: Sending request to backend...");
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/generate/portfolio`, {
         method: 'POST',
         body: formData,
       });
 
+      console.log("DEBUG: Backend response status:", res.status);
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Generation failed.');
 
+      console.log("DEBUG: Generation successful, data received.");
       setGithubData(githubData);
       setOnboarding({ role, targetJob: jobTarget, content: data });
+      console.log("DEBUG: Store updated, navigating to /preview");
       navigate('/preview');
     } catch (error) {
+      console.error("DEBUG: Generation CRITICAL failure:", error);
       alert(`Generation failed: ${error.message}`);
     } finally {
       setLoading(false);

@@ -21,8 +21,9 @@ const ProtectedRoute = ({ children }) => {
 }
 
 const PublicRoute = ({ children }) => {
-  const { user, portfolioExists } = useStore()
+  const { user, portfolioExists, isLoading } = useStore()
   
+  if (isLoading) return null
   if (user) {
     return <Navigate to={portfolioExists ? "/preview" : "/onboarding"} replace />
   }
