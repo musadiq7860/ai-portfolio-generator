@@ -39,6 +39,9 @@ async def save_portfolio(portfolio: dict):
             "target_job": portfolio.get("target_job")
         }).execute()
         return {"message": "Portfolio saved successfully", "data": result.data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/{username}/cv")
 async def get_portfolio_cv(username: str, cv_template: str = "modern"):
     try:

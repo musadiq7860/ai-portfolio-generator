@@ -9,7 +9,9 @@ def get_groq_client():
     if _groq_client is None:
         key = os.getenv("GROQ_API_KEY")
         if not key:
+            print("ERROR: GROQ_API_KEY is missing from environment")
             raise ValueError("GROQ_API_KEY must be set")
+        print(f"DEBUG: Initializing Groq client with key (len={len(key)})")
         _groq_client = Groq(api_key=key)
     return _groq_client
 

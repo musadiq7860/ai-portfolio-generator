@@ -82,8 +82,15 @@ const Onboarding = () => {
       console.log("DEBUG: Backend returned data:", data);
       
       if (!res.ok || data.error) {
-        console.error("DEBUG: Generation failed with:", data.error || 'No specific error');
-        throw new Error(data.error || 'Generation failed.');
+        let errorDetail = data.error || 'Generation failed.';
+        if (data.detail && Array.isArray(data.detail)) {
+          errorDetail = data.detail.map(d => d.msg || JSON.stringify(d)).join(', ');
+        } else if (data.detail) {
+          errorDetail = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
+        }
+        
+        console.error("DEBUG: Generation failed:", res.status, data);
+        throw new Error(`HTTP ${res.status}: ${errorDetail}`);
       }
 
       console.log("DEBUG: Generation successful, data received.");
