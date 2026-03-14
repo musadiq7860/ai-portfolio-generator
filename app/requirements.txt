@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-dotenv
+groq
+PyMuPDF
+weasyprint
+supabase
+python-multipart
+httpx
+jinja2
