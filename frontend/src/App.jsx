@@ -124,6 +124,7 @@ function App() {
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
         <Route path="/preview" element={<ProtectedRoute><Preview /></ProtectedRoute>} />
+        <Route path="/portfolio" element={<Home />} />
         <Route path="/portfolio/:username" element={<Portfolio />} />
       </Routes>
     </>

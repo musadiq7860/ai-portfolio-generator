@@ -1,0 +1,17 @@
+﻿08ded77 fix generation validation error and complete templates
+475a7ce fix: automatic redirect for logged-in users on Home page
+e92ff59 fix: App.jsx syntax and add detailed generation logging
+50d9996 fix: persist onboarding state and fix App syntax error
+791075b fix: exclude isLoading from persistence and add auth safety resets
+e0481b5 debug: log onboarding state in Preview
+a8f6ac8 debug: add logs to Preview and fix Login hang
+6c9050c fix: App.jsx PublicRoute hang and Onboarding logging
+bed30e6 fix: standardized CV generation and download logic
+17658af fix: App.jsx session hang and UI polish
+e83480a feat: complete editorial UI redesign and robust auth overhaul
+3fb49b9 add github route
+85f211e add cv_generator.py
+e393e26 add groq_service.py
+7b1545b add github_service.py
+bc8a454 add main.py
+e6fae78 initial project setup

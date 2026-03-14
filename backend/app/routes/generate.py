@@ -21,18 +21,22 @@ async def generate_portfolio(
     user_id: str = Form("anonymous"),
     username: str = Form("user"),
     full_name: str = Form(""),
-    linkedin_pdf: UploadFile = File(...)
+    linkedin_pdf: UploadFile = File(None)
 ):
     try:
-        pdf_bytes = await linkedin_pdf.read()
-        print(f"DEBUG: Processing PDF ({len(pdf_bytes)} bytes)")
-        try:
-            linkedin_text = extract_text_from_pdf(pdf_bytes)
-            linkedin_sections = extract_linkedin_sections(linkedin_text)
-            print(f"DEBUG: Extracted LinkedIn sections. Text length: {len(linkedin_text)}")
-        except Exception as pdf_err:
-            print(f"DEBUG: PDF Extraction Error: {str(pdf_err)}")
-            return {"error": f"Could not read PDF: {str(pdf_err)}"}
+        linkedin_text = ""
+        linkedin_sections = {"full_text": ""}
+        if linkedin_pdf is not None and linkedin_pdf.filename:
+            pdf_bytes = await linkedin_pdf.read()
+            print(f"DEBUG: Processing PDF ({len(pdf_bytes)} bytes)")
+            try:
+                linkedin_text = extract_text_from_pdf(pdf_bytes)
+                linkedin_sections = extract_linkedin_sections(linkedin_text)
+                print(f"DEBUG: Extracted LinkedIn sections. Text length: {len(linkedin_text)}")
+            except Exception as pdf_err:
+                print(f"DEBUG: PDF Extraction Error: {str(pdf_err)}")
+                # We can ignore the error if PDF was optional, or return error depending on strictness
+                print("WARNING: Ignoring invalid PDF and proceeding without it.")
 
         print(f"DEBUG: Fetching GitHub data for {github_url}")
         try:

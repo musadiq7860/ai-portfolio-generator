@@ -1,112 +1,162 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user, portfolioExists } = useStore();
+  const { setOnboarding, setGithubData } = useStore();
+  const [githubUrl, setGithubUrl] = useState('https://github.com/musadiq7860');
+  const [bio, setBio] = useState('full stack');
+  const [template, setTemplate] = useState('Minimal');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      navigate(portfolioExists ? "/preview" : "/onboarding");
+  const handleGenerate = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      // Fetch GitHub data
+      const ghRes = await fetch(`${import.meta.env.VITE_API_URL}/api/github/repos?github_url=${githubUrl}`);
+      const ghData = await ghRes.json();
+      
+      if (!ghRes.ok || ghData.error) {
+        throw new Error(ghData.error || 'Failed to fetch GitHub repositories.');
+      }
+      
+      setGithubData(ghData);
+
+      // Simple onboarding payload for backend
+      const formData = new FormData();
+      formData.append('github_url', githubUrl);
+      formData.append('role', 'Developer'); // Default
+      formData.append('job_target', '');
+      formData.append('skills_to_emphasize', '');
+      formData.append('one_liner', '');
+      formData.append('highlighted_projects', '[]');
+      formData.append('template', template);
+      formData.append('user_id', 'anonymous');
+      formData.append('username', ghData.username || 'user');
+      formData.append('full_name', ghData.name || '');
+
+      // We need a dummy linkedin_pdf to bypass validation if it's required
+      // The backend uses UploadFile which requires a blobl file.
+      const blob = new Blob(['dummy pdf content'], { type: 'application/pdf' });
+      formData.append('linkedin_pdf', blob, 'dummy.pdf');
+
+      const genRes = await fetch(`${import.meta.env.VITE_API_URL}/api/generate/portfolio`, {
+        method: 'POST',
+        body: formData
+      });
+      const genData = await genRes.json();
+
+      if (!genRes.ok || genData.error) {
+        throw new Error(genData.error || 'Failed to generate portfolio.');
+      }
+
+      setOnboarding({ role: 'Developer', targetJob: '', content: genData });
+      navigate('/preview'); // Navigate to the preview page to show the generated portfolio
+    } catch (err) {
+      setError(err.message || 'Failed to fetch GitHub repositories.');
+    } finally {
+      setLoading(false);
     }
-  }, [user, portfolioExists, navigate]);
+  };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--geist-background)' }}>
-      <main className="container" style={{ padding: '160px 0 100px' }}>
-        <div style={{ maxWidth: '800px', marginBottom: '80px' }}>
-          <div style={{ 
-            display: 'inline-block', 
-            padding: '4px 12px', 
-            background: 'var(--geist-card-bg)', 
-            border: '1px solid var(--geist-border)',
-            borderRadius: '2px',
-            fontSize: '11px',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            marginBottom: '32px',
-            color: 'var(--geist-secondary)'
-          }}>
-            Llama 3.3 Engineered
-          </div>
-          
-          <h1 style={{ 
-            fontSize: 'clamp(48px, 8vw, 100px)', 
-            lineHeight: '0.85', 
-            marginBottom: '40px' 
-          }}>
-            Your Professional <br />
-            <span style={{ color: 'var(--geist-secondary)' }}>Identity,</span> Redefined.
-          </h1>
+    <div style={{ minHeight: '100vh', background: '#fff', color: '#333', padding: '40px 20px', fontFamily: 'Arial, sans-serif' }}>
+      <main style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#eee', marginBottom: '16px' }}>
+          AI Developer Portfolio Generator
+        </h1>
+        <p style={{ fontSize: '16px', color: '#666', marginBottom: '32px' }}>
+          Enter a GitHub username to generate a professional developer portfolio.
+        </p>
 
-          <p style={{ 
-            fontSize: '20px', 
-            color: 'var(--geist-secondary)', 
-            maxWidth: '540px', 
-            lineHeight: '1.5',
-            marginBottom: '48px',
-            fontWeight: '400'
-          }}>
-            Transform open-source contributions and career milestones into a bold, editorial visual masterpiece. Built for the elite engineer.
-          </p>
-
-          <div style={{ display: 'flex', gap: '16px' }}>
-            {user ? (
-              <Link to={portfolioExists ? "/preview" : "/onboarding"} className="btn-geist btn-geist-primary" style={{ padding: '16px 32px', fontSize: '15px' }}>
-                Go to Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link to="/register" className="btn-geist btn-geist-primary" style={{ padding: '16px 32px', fontSize: '15px' }}>
-                  Deploy Your Portfolio
-                </Link>
-                <Link to="/login" className="btn-geist btn-geist-secondary" style={{ padding: '16px 32px', fontSize: '15px' }}>
-                  Member Access
-                </Link>
-              </>
-            )}
-          </div>
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+          <input
+            type="text"
+            value={githubUrl}
+            onChange={(e) => setGithubUrl(e.target.value)}
+            placeholder="https://github.com/username"
+            style={{ 
+              flex: 1, 
+              padding: '12px 16px', 
+              fontSize: '16px', 
+              border: '1px solid #ccc', 
+              borderRadius: '8px' 
+            }}
+          />
+          <button 
+            onClick={handleGenerate}
+            disabled={loading}
+            style={{ 
+              padding: '12px 24px', 
+              fontSize: '16px', 
+              background: '#000', 
+              color: '#fff', 
+              border: 'none', 
+              borderRadius: '8px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            {loading ? 'Generating...' : 'Generate'}
+          </button>
         </div>
 
-        <section style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(3, 1fr)', 
-          gap: '1px', 
-          background: 'var(--geist-border)',
-          border: '1px solid var(--geist-border)',
-          marginTop: '120px'
-        }}>
-          {[
-            { title: 'AI Synthesis', desc: 'Deep analysis of repository patterns and code quality.' },
-            { title: 'Editorial Polish', desc: 'Bespoke layouts that feel human-designed, not generated.' },
-            { title: 'Global Edge', desc: 'Instant deployment to a high-speed professional network.' }
-          ].map((feature, i) => (
-            <div key={i} style={{ padding: '48px', background: 'var(--geist-background)' }}>
-              <h3 style={{ fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>{feature.title}</h3>
-              <p style={{ fontSize: '14px', color: 'var(--geist-secondary)', lineHeight: '1.6' }}>{feature.desc}</p>
-            </div>
-          ))}
-        </section>
+        <textarea
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          rows={4}
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            fontSize: '16px',
+            border: '1px solid #ccc',
+            borderRadius: '8px',
+            marginBottom: '24px',
+            resize: 'vertical'
+          }}
+        />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
+          <span style={{ fontSize: '16px', color: '#666' }}>Template:</span>
+          <button
+            onClick={() => setTemplate('Minimal')}
+            style={{
+              padding: '8px 16px',
+              fontSize: '14px',
+              background: template === 'Minimal' ? '#f0f0f0' : 'transparent',
+              color: template === 'Minimal' ? '#000' : '#666',
+              border: template === 'Minimal' ? '1px solid #ccc' : '1px solid transparent',
+              borderRadius: '20px',
+              cursor: 'pointer'
+            }}
+          >
+            Minimal
+          </button>
+          <button
+            onClick={() => setTemplate('Dark')}
+            style={{
+              padding: '8px 16px',
+              fontSize: '14px',
+              background: template === 'Dark' ? '#000' : 'transparent',
+              color: template === 'Dark' ? '#fff' : '#666',
+              border: template === 'Dark' ? '1px solid #000' : '1px solid transparent',
+              borderRadius: '20px',
+              cursor: 'pointer'
+            }}
+          >
+            Dark
+          </button>
+        </div>
+
+        {error && (
+          <div style={{ color: 'red', fontSize: '16px', marginTop: '16px' }}>
+            {error}
+          </div>
+        )}
       </main>
-
-      <footer className="container" style={{ 
-        padding: '60px 0', 
-        borderTop: '1px solid var(--geist-border)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        color: 'var(--geist-secondary)',
-        fontSize: '12px'
-      }}>
-        <span>&copy; 2026 AI Portfolio. Built for scale.</span>
-        <div style={{ display: 'flex', gap: '24px' }}>
-          <span>Privacy</span>
-          <span>Terms</span>
-          <span>Systems</span>
-        </div>
-      </footer>
     </div>
   );
 };
