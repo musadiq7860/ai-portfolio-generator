@@ -34,7 +34,12 @@ const Portfolio = () => {
     fetchPortfolio();
   }, [username]);
 
-  if (loading) return <LoadingScreen message="Accessing identity pool..." />;
+  if (loading) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--geist-background)', color: 'var(--geist-secondary)', fontFamily: 'var(--font-heading)', fontSize: '12px', letterSpacing: '0.2em', animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}>
+      LOADING
+      <style>{`@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }`}</style>
+    </div>
+  );
   if (error || !portfolio) return (
     <div className="container" style={{ padding: '160px 0', textAlign: 'center' }}>
       <h1 style={{ fontSize: '72px', fontWeight: '800', marginBottom: '16px', fontFamily: 'var(--font-heading)', opacity: 0.1 }}>404</h1>
