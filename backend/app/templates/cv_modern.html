@@ -37,8 +37,9 @@
   <div class="role">{{ role }}</div>
   <div class="one-liner">{{ one_liner }}</div>
   <div class="contact">
-    {% if contact.github %}<span>GitHub: {{ contact.github }}</span>{% endif %}
-    {% if suggested_rate %}<span>Rate: {{ suggested_rate }}</span>{% endif %}
+    {% if contact.email %}<span>Email: <a href="mailto:{{ contact.email }}" style="color:#555;text-decoration:none;">{{ contact.email }}</a></span>{% endif %}
+    {% if contact.linkedin %}<span>LinkedIn: <a href="{{ contact.linkedin }}" style="color:#555;text-decoration:none;">{{ contact.linkedin }}</a></span>{% endif %}
+    {% if contact.github %}<span>GitHub: <a href="{{ contact.github }}" style="color:#555;text-decoration:none;">{{ contact.github }}</a></span>{% endif %}
   </div>
 </div>
 

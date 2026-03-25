@@ -24,7 +24,7 @@ def generate_cv_pdf(portfolio: dict, cv_template: str = "modern") -> bytes:
         other_projects=portfolio.get("other_projects", []),
         experience=portfolio.get("experience", []),
         education=portfolio.get("education", []),
-        contact=portfolio.get("contact", {}),
+        contact=portfolio.get("contact_details", {}),
         suggested_rate=portfolio.get("suggested_rate", "")
     )
     
