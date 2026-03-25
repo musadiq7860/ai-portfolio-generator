@@ -1,0 +1,9 @@
+../backend
+*.py
+__pycache__
+*.pyc
+.env
+Dockerfile
+requirements.txt
+decode_jwt.py
+supabase_schema.sql

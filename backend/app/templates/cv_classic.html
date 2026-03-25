@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Times New Roman', Times, serif; color: #333; background: #fff; padding: 40px 50px; line-height: 1.5; }
+  .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+  .name { font-size: 32px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+  .role { font-size: 18px; color: #555; margin-top: 5px; }
+  .contact { margin-top: 10px; font-size: 12px; }
+  .contact span { margin: 0 10px; }
+  .section { margin-bottom: 25px; }
+  .section-title { font-size: 16px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #ccc; margin-bottom: 10px; color: #000; }
+  .bio { font-size: 13px; text-align: justify; }
+  .skills-list { font-size: 13px; margin-left: 20px; }
+  .skill-item { display: inline-block; margin-right: 15px; margin-bottom: 5px; }
+  .project { margin-bottom: 15px; }
+  .project-header { display: flex; justify-content: space-between; align-items: baseline; }
+  .project-name { font-size: 14px; font-weight: bold; }
+  .project-featured { font-size: 10px; font-style: italic; color: #666; margin-left: 5px; }
+  .project-desc { font-size: 13px; margin-top: 3px; }
+  .project-tech { font-size: 12px; color: #666; font-style: italic; margin-top: 2px; }
+  .exp-item { margin-bottom: 15px; }
+  .exp-header { display: flex; justify-content: space-between; align-items: baseline; }
+  .exp-title { font-size: 14px; font-weight: bold; }
+  .exp-company-dates { font-size: 14px; color: #555; }
+  .exp-desc { font-size: 13px; margin-top: 3px; }
+  .edu-item { margin-bottom: 10px; }
+  .edu-header { display: flex; justify-content: space-between; align-items: baseline; }
+  .edu-degree { font-size: 14px; font-weight: bold; }
+  .edu-school-year { font-size: 14px; color: #555; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="name">{{ name }}</div>
+  <div class="role">{{ role }}</div>
+  <div class="contact">
+    {% if contact.github %}<span>GitHub: {{ contact.github }}</span>{% endif %}
+    {% if one_liner %}<span>{{ one_liner }}</span>{% endif %}
+    {% if suggested_rate %}<span>Rate: {{ suggested_rate }}</span>{% endif %}
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Professional Summary</div>
+  <div class="bio">{{ bio }}</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Technical Skills</div>
+  <div class="skills-list">
+    {% for skill in skills %}
+    <span class="skill-item">{{ skill }}{% if not loop.last %}, {% endif %}</span>
+    {% endfor %}
+  </div>
+</div>
+
+{% if featured_projects %}
+<div class="section">
+  <div class="section-title">Featured Projects</div>
+  {% for project in featured_projects %}
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">{{ project.name }}<span class="project-featured">(Featured)</span></span>
+    </div>
+    <div class="project-desc">{{ project.description }}</div>
+    <div class="project-tech">Technologies: {{ project.technologies | join(', ') }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if other_projects %}
+<div class="section">
+  <div class="section-title">Other Projects</div>
+  {% for project in other_projects %}
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">{{ project.name }}</span>
+    </div>
+    <div class="project-desc">{{ project.description }}</div>
+    <div class="project-tech">Technologies: {{ project.technologies | join(', ') }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if experience %}
+<div class="section">
+  <div class="section-title">Work Experience</div>
+  {% for exp in experience %}
+  <div class="exp-item">
+    <div class="exp-header">
+      <span class="exp-title">{{ exp.title }}</span>
+      <span class="exp-company-dates">{{ exp.company }} | {{ exp.duration }}</span>
+    </div>
+    <div class="exp-desc">{{ exp.description }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if education %}
+<div class="section">
+  <div class="section-title">Education</div>
+  {% for edu in education %}
+  <div class="edu-item">
+    <div class="edu-header">
+      <span class="edu-degree">{{ edu.degree }}</span>
+      <span class="edu-school-year">{{ edu.institution }} | {{ edu.year }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+</body>
+</html>

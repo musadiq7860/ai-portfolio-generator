@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --geist-background: #000000;
+  --geist-foreground: #ffffff;
+  --geist-secondary: #888888;
+  --geist-accent: #00ff88;
+  --geist-border: #222222;
+  --geist-card-bg: #0a0a0a;
+  --geist-card-hover: #111111;
+  --geist-input-bg: #111111;
+  --geist-input-focus: #333333;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition: all 0.2s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--geist-background);
+  color: var(--geist-foreground);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.04em;
+  font-weight: 700;
+}
+
+.text-secondary { color: var(--geist-secondary); }
+.text-accent { color: var(--geist-accent); }
+
+/* Editorial Grid */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Sophisticated Glass/Card System */
+.card-editorial {
+  background: var(--geist-card-bg);
+  border: 1px solid var(--geist-border);
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+}
+
+.card-editorial:hover {
+  border-color: #333;
+  background: var(--geist-card-hover);
+}
+
+/* Global Buttons */
+.btn-geist {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-family: var(--font-heading);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+
+.btn-geist-primary {
+  background: var(--geist-foreground);
+  color: var(--geist-background);
+}
+
+.btn-geist-primary:hover {
+  background: #e5e5e5;
+}
+
+.btn-geist-secondary {
+  background: var(--geist-background);
+  color: var(--geist-foreground);
+  border-color: var(--geist-border);
+}
+
+.btn-geist-secondary:hover {
+  border-color: #444;
+  background: #111;
+}
+
+.btn-geist-accent {
+  background: var(--geist-accent);
+  color: #000;
+}
+
+.btn-geist-accent:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+/* Inputs Header */
+.label-geist {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--geist-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-geist {
+  width: 100%;
+  background: var(--geist-input-bg);
+  border: 1px solid var(--geist-border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  color: var(--geist-foreground);
+  font-family: var(--font-body);
+  font-size: 15px;
+  transition: var(--transition);
+}
+
+.input-geist:focus {
+  outline: none;
+  border-color: #444;
+  background: var(--geist-input-focus);
+}
+
+/* Abstract Background (Vercel Style) */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.glow-bg {
+  position: fixed;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.05) 0%, transparent 70%);
+  z-index: -2;
+  pointer-events: none;
+  filter: blur(80px);
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--geist-background); }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
