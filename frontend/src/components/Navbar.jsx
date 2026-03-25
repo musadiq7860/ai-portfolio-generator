@@ -8,9 +8,14 @@ function Navbar() {
   const location = useLocation()
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    reset()
-    navigate('/')
+    try {
+      await supabase.auth.signOut()
+    } catch (err) {
+      console.error("Logout caught error, forcing local reset:", err);
+    } finally {
+      reset()
+      navigate('/')
+    }
   }
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register'
@@ -58,14 +63,14 @@ function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
           {user ? (
             <>
-              <Link to={portfolioExists ? "/preview" : "/onboarding"} style={{
+              <Link to="/onboarding" style={{
                 fontSize: '13px',
                 fontWeight: '500',
                 color: 'var(--geist-secondary)',
                 textDecoration: 'none',
                 transition: 'var(--transition)'
               }} onMouseOver={(e) => e.target.style.color = 'var(--geist-foreground)'} onMouseOut={(e) => e.target.style.color = 'var(--geist-secondary)'}>
-                Dashboard
+                Edit Data
               </Link>
               <div style={{ height: '16px', width: '1px', background: 'var(--geist-border)' }}></div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
