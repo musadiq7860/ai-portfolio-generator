@@ -1,5 +1,5 @@
 import os
-# from weasyprint import HTML
+from weasyprint import HTML
 from jinja2 import Environment, FileSystemLoader
 
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "../templates")
@@ -28,6 +28,5 @@ def generate_cv_pdf(portfolio: dict, cv_template: str = "modern") -> bytes:
         suggested_rate=portfolio.get("suggested_rate", "")
     )
     
-    # pdf_bytes = HTML(string=html_content).write_pdf()
-    # return pdf_bytes
-    return b"%PDF-1.4\n%Mock PDF (Generation Disabled on Windows)\n"
+    pdf_bytes = HTML(string=html_content).write_pdf()
+    return pdf_bytes
