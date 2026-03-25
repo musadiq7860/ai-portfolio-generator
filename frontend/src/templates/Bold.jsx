@@ -35,6 +35,15 @@ const Bold = ({ content, githubData, metadata }) => {
         <motion.p variants={blockVariants} style={{ fontSize: '24px', fontWeight: '700', marginTop: '40px', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           {(metadata.role || '').toUpperCase()}
         </motion.p>
+        
+        <motion.div variants={blockVariants} style={{ display: 'flex', gap: '24px', marginTop: '32px', fontSize: '12px', fontWeight: '800', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          {content.contact_details?.email && (
+            <a href={`mailto:${content.contact_details.email}`} style={{ color: '#000', textDecoration: 'none', borderBottom: '2px solid #000', paddingBottom: '4px' }}>EMAIL</a>
+          )}
+          {content.contact_details?.linkedin && (
+            <a href={content.contact_details.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: '#000', textDecoration: 'none', borderBottom: '2px solid #000', paddingBottom: '4px' }}>LINKEDIN</a>
+          )}
+        </motion.div>
         {content.one_liner && (
           <motion.p variants={blockVariants} style={{ fontSize: '14px', marginTop: '16px', color: '#666', maxWidth: '500px' }}>{content.one_liner}</motion.p>
         )}
