@@ -1,4 +1,4 @@
-   # AI Portfolio & CV Generator
+ # AI Portfolio & CV Generator
 
 Turn your GitHub profile into a professional portfolio website and downloadable CV in under 60 seconds — powered by AI.
 
@@ -6,6 +6,7 @@ Turn your GitHub profile into a professional portfolio website and downloadable 
 
 ## Live Demo
 
+ 
 🔗 **App:** https://ai-portfolio-generator1.vercel.app  
 ⭐ **GitHub:** https://github.com/musadiq7860/ai-portfolio-generator
 
