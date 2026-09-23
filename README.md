@@ -108,7 +108,7 @@ ai-portfolio-generator/
 
 ---
 
-## Local Setup
+
 
 ### Backend
 ```bash
