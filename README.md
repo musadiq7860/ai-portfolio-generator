@@ -72,7 +72,7 @@ No design skills needed. No templates to fill manually. The AI reads your actual
 
 ---
 
-## Portfolio Styles
+## Portfolio
 
 | Style | Description |
 |---|---|
